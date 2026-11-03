@@ -1,0 +1,23 @@
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Databases and logs
+*.sqlite3
+*.db
+*.log
+
+# Editors / OS
+.idea/
+.DS_Store
