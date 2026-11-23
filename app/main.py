@@ -2,11 +2,12 @@ from fastapi import Depends, FastAPI
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app.api.sms import router as sms_router
 from app.config import settings
 from app.database import get_db
 
 app = FastAPI(title="Penzi")
-
+app.include_router(sms_router)
 
 @app.get("/api/health")
 def health():
