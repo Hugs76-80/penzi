@@ -207,3 +207,49 @@ def test_unknown_command_explains_how_to_start():
         "To register SMS start#name#age#gender#county#town to 22141.\n"
         "To search SMS match#age#town to 22141."
     )
+def test_start_format_error_shows_the_format():
+    assert t.start_format_error(CODE) == (
+        "We could not read your registration.\n"
+        "Please SMS start#name#age#gender#county#town to 22141.\n"
+        "E.g., start#John Doe#26#Male#Nakuru#Naivasha"
+    )
+
+
+def test_start_text_too_long_asks_to_shorten():
+    assert t.start_text_too_long() == (
+        "Your name, county or town is too long. Please shorten it and try again."
+    )
+
+
+def test_invalid_age_states_the_limits():
+    assert t.invalid_age(18, 99) == (
+        "Age must be a number from 18 to 99. Please try again."
+    )
+
+
+def test_invalid_gender_names_the_choices():
+    assert t.invalid_gender() == "Gender must be Male or Female. Please try again."
+
+
+def test_already_registered_started_points_to_details():
+    assert t.already_registered_started("Jamal Jalang'o", CODE) == (
+        "You are already registered, Jamal.\n"
+        "To add more details SMS details#levelOfEducation#profession"
+        "#maritalStatus#religion#ethnicity to 22141, "
+        "or search with match#age#town."
+    )
+
+
+def test_already_registered_details_done_points_to_myself():
+    assert t.already_registered_details_done("Jamal Jalang'o", CODE) == (
+        "You are already registered, Jamal.\n"
+        "To finish, SMS a brief description of yourself to "
+        "22141 starting with the word MYSELF."
+    )
+
+
+def test_already_registered_complete_points_to_matching():
+    assert t.already_registered_complete("Jamal Jalang'o", CODE) == (
+        "You are already registered, Jamal.\n"
+        "To search for a MPENZI, SMS match#age#town to 22141."
+    )

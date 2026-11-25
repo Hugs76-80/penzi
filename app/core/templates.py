@@ -169,4 +169,46 @@ def unknown_command(code: str) -> str:
         "Sorry, we did not understand that.\n"
         f"To register SMS start#name#age#gender#county#town to {code}.\n"
         f"To search SMS match#age#town to {code}."
+ )
+def start_format_error(code: str) -> str:
+    return (
+        "We could not read your registration.\n"
+        f"Please SMS start#name#age#gender#county#town to {code}.\n"
+        "E.g., start#John Doe#26#Male#Nakuru#Naivasha"
+    )
+
+
+def start_text_too_long() -> str:
+    return "Your name, county or town is too long. Please shorten it and try again."
+
+
+def invalid_age(min_age: int, max_age: int) -> str:
+    return f"Age must be a number from {min_age} to {max_age}. Please try again."
+
+
+def invalid_gender() -> str:
+    return "Gender must be Male or Female. Please try again."
+
+
+def already_registered_started(name: str, code: str) -> str:
+    return (
+        f"You are already registered, {first_name(name)}.\n"
+        "To add more details SMS details#levelOfEducation#profession"
+        f"#maritalStatus#religion#ethnicity to {code}, "
+        "or search with match#age#town."
+    )
+
+
+def already_registered_details_done(name: str, code: str) -> str:
+    return (
+        f"You are already registered, {first_name(name)}.\n"
+        "To finish, SMS a brief description of yourself to "
+        f"{code} starting with the word MYSELF."
+    )
+
+
+def already_registered_complete(name: str, code: str) -> str:
+    return (
+        f"You are already registered, {first_name(name)}.\n"
+        f"To search for a MPENZI, SMS match#age#town to {code}."
     )
