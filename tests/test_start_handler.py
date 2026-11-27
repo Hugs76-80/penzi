@@ -110,3 +110,22 @@ def test_a_repeat_start_never_changes_the_saved_profile(db):
     assert user.name == "Jamal Jalang'o"
     assert user.age == 29
     assert user.gender == "Male"
+
+def test_each_user_is_greeted_by_their_own_name(db):
+    register(db)
+    maria = user_repo.create(
+        db,
+        phone="254722000111",
+        name="Maria Mwende",
+        age=28,
+        gender="Female",
+        county="Nairobi",
+        town="Kasarani",
+    )
+
+    for_jamal = start.handle(db, PHONE, GOOD)
+    for_maria = start.handle(db, maria.phone, GOOD)
+
+    assert "Jamal" in for_jamal[0].text
+    assert "Maria" in for_maria[0].text
+    assert "Jamal" not in for_maria[0].text
