@@ -89,3 +89,73 @@ def start_registration(db: Session, phone: str, fields: list[str]) -> StartOutco
             raise
         return StartOutcome(StartError.ALREADY_REGISTERED, winner)
     return StartOutcome(user=user)
+
+EDUCATION_MAX = 50
+PROFESSION_MAX = 50
+MARITAL_STATUS_MAX = 30
+RELIGION_MAX = 30
+ETHNICITY_MAX = 50
+
+
+class DetailsError(StrEnum):
+    NOT_REGISTERED = "not_registered"
+    WRONG_FIELD_COUNT = "wrong_field_count"
+    MISSING_FIELD = "missing_field"
+    FIELD_TOO_LONG = "field_too_long"
+
+
+@dataclass(frozen=True)
+class DetailsOutcome:
+    error: DetailsError | None = None
+    user: User | None = None
+
+
+def _capitalise(value: str) -> str:
+    return value[:1].upper() + value[1:]
+
+
+def _check_detail(value: str, max_length: int) -> DetailsError | None:
+    if not value:
+        return DetailsError.MISSING_FIELD
+    if len(value) > max_length:
+        return DetailsError.FIELD_TOO_LONG
+    return None
+
+
+def save_user_details(db: Session, phone: str, fields: list[str]) -> DetailsOutcome:
+    user = user_repo.get_by_phone(db, phone)
+    if user is None:
+        return DetailsOutcome(DetailsError.NOT_REGISTERED)
+
+    if len(fields) != 5:
+        return DetailsOutcome(DetailsError.WRONG_FIELD_COUNT, user)
+    cleaned = [_clean(f) for f in fields]
+
+    education = _capitalise(cleaned[0])
+    profession = _capitalise(cleaned[1])
+    marital_status = cleaned[2].lower()
+    religion = _capitalise(cleaned[3])
+    ethnicity = _capitalise(cleaned[4])
+
+    checks = (
+        (education, EDUCATION_MAX),
+        (profession, PROFESSION_MAX),
+        (marital_status, MARITAL_STATUS_MAX),
+        (religion, RELIGION_MAX),
+        (ethnicity, ETHNICITY_MAX),
+    )
+    for value, limit in checks:
+        problem = _check_detail(value, limit)
+        if problem:
+            return DetailsOutcome(problem, user)
+
+    user_repo.save_details(
+        db,
+        user,
+        education=education,
+        profession=profession,
+        marital_status=marital_status,
+        religion=religion,
+        ethnicity=ethnicity,
+    )
+    return DetailsOutcome(user=user)

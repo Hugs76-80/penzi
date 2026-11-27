@@ -212,3 +212,21 @@ def already_registered_complete(name: str, code: str) -> str:
         f"You are already registered, {first_name(name)}.\n"
         f"To search for a MPENZI, SMS match#age#town to {code}."
     )
+def details_format_error(code: str) -> str:
+    return (
+        "We could not read your details.\n"
+        "Please SMS details#levelOfEducation#profession#maritalStatus#religion"
+        f"#ethnicity to {code}.\n"
+        "E.g. details#diploma#driver#single#christian#mijikenda"
+    )
+
+
+def details_text_too_long() -> str:
+    return "One of your details is too long. Please shorten it and try again."
+
+
+def details_updated(code: str) -> str:
+    return (
+        "Your details have been updated.\n"
+        f"To search for a MPENZI, SMS match#age#town to {code}."
+    )

@@ -253,3 +253,23 @@ def test_already_registered_complete_points_to_matching():
         "You are already registered, Jamal.\n"
         "To search for a MPENZI, SMS match#age#town to 22141."
     )
+def test_details_format_error_shows_the_format():
+    assert t.details_format_error(CODE) == (
+        "We could not read your details.\n"
+        "Please SMS details#levelOfEducation#profession#maritalStatus#religion"
+        "#ethnicity to 22141.\n"
+        "E.g. details#diploma#driver#single#christian#mijikenda"
+    )
+
+
+def test_details_text_too_long_asks_to_shorten():
+    assert t.details_text_too_long() == (
+        "One of your details is too long. Please shorten it and try again."
+    )
+
+
+def test_details_updated_points_to_matching():
+    assert t.details_updated(CODE) == (
+        "Your details have been updated.\n"
+        "To search for a MPENZI, SMS match#age#town to 22141."
+    )   
